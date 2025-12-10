@@ -7,7 +7,7 @@ interface OrgChartState {
   rootNode: OrgChartNode | null;
   loading: boolean;
   error: string | null;
-  expandedNodeIds: number[];       // list of employee_id values
+  expandedNodeIds: number[]; // list of employee_id values
   selectedNode: OrgChartNode | null;
   isSidebarOpen: boolean;
 }
@@ -22,16 +22,16 @@ const initialState: OrgChartState = {
   isSidebarOpen: false,
 };
 
-export const fetchOrgChart = createAsyncThunk<
-  OrgChartResponse,
-  number
->("orgChart/fetchOrgChart", async (employeeId: number) => {
-  // Assuming baseURL = https://worksync.global/api
-  const res = await api.get<OrgChartResponse>(
-    `/relationship/people_chart/${employeeId}`
-  );
-  return res.data;
-});
+export const fetchOrgChart = createAsyncThunk<OrgChartResponse, number>(
+  "orgChart/fetchOrgChart",
+  async (employeeId: number) => {
+    // Assuming baseURL = https://worksync.global/api
+    const res = await api.get<OrgChartResponse>(
+      `/relationship/people_chart/${employeeId}`
+    );
+    return res.data;
+  }
+);
 
 const orgChartSlice = createSlice({
   name: "orgChart",
@@ -76,18 +76,22 @@ const orgChartSlice = createSlice({
       })
       .addCase(fetchOrgChart.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch chart";
+        const message = action.error.message || "Failed to fetch chart";
+
+        // If it's a 400, treat it as "no data" instead of a hard error
+        if (message.includes("400")) {
+          state.error = null; // no error shown
+        } else {
+          state.error = message; // real error (network, 500, etc.)
+        }
+
         state.rootNode = null;
         state.expandedNodeIds = [];
       });
   },
 });
 
-export const {
-  setCurrentEmployeeId,
-  toggleNode,
-  openSidebar,
-  closeSidebar,
-} = orgChartSlice.actions;
+export const { setCurrentEmployeeId, toggleNode, openSidebar, closeSidebar } =
+  orgChartSlice.actions;
 
 export default orgChartSlice.reducer;

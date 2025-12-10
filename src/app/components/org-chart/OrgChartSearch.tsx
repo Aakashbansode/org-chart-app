@@ -18,16 +18,33 @@ export default function OrgChartSearch() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex gap-2 items-center max-w-sm">
+    <form
+      onSubmit={onSubmit}
+      className="flex items-center w-full max-w-md bg-[#f3f4f6] rounded-full px-4 py-2 border border-gray-200 shadow-sm"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-4 w-4 text-gray-400 mr-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.6 3.6a7.5 7.5 0 0013.05 13.05z"
+        />
+      </svg>
       <input
-        className="border rounded px-3 py-2 w-full text-sm"
-        placeholder="Search employee by ID (e.g. 18)"
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+        placeholder="Search employee by ID (e.g. 18, 21, 22...)"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
       <button
         type="submit"
-        className="px-4 py-2 text-sm rounded bg-black text-white"
+        className="ml-3 px-4 py-1.5 text-xs md:text-sm rounded-full bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition"
       >
         Search
       </button>
